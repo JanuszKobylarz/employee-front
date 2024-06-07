@@ -1,10 +1,24 @@
-<script setup lang="ts">
+<script setup>
+import { ref, onMounted } from 'vue'
+import AddForm from './components/AddForm.vue'
 import EmployeeItem from './components/EmployeeItem.vue'
+
+const employees = ref(null)
+
+onMounted(() => {
+  fetch('http://localhost:8000/api/employees')
+    .then((response) => response.json())
+    .then((data) => (employees.value = data))
+})
 </script>
 
 <template>
   <div>
-    <EmployeeItem />
+    <div v-if="!employees" class="text-center">
+      <div class="spinner-border spinner-border-sm"></div>
+    </div>
+    <EmployeeItem v-if="employees" :employees="employees" />
+    <AddForm />
   </div>
 </template>
 
