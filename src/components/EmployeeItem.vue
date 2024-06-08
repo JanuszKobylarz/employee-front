@@ -1,12 +1,26 @@
 <template>
-  <ul>
-    <li v-for="employee in employees" :key="employee.id">
-      {{ employee.name }}
-    </li>
-  </ul>
+  <div>
+    <div class="employee-item" v-for="employee in employees" :key="employee.id">
+      <span>
+        {{ employee.name }}
+      </span>
+      <span>
+        {{ employee.surname }}
+      </span>
+      <span>
+        {{ employee.position }}
+      </span>
+    </div>
+  </div>
 </template>
 <script setup>
-import { ref } from 'vue'
-
 defineProps(['employees'])
 </script>
+<style scoped>
+.employee-item {
+  display: flex;
+  padding: 1rem;
+  border-bottom: 1px solid #ccc;
+  gap: 4px;
+}
+</style>

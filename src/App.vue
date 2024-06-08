@@ -14,6 +14,7 @@ onMounted(() => {
 
 <template>
   <div>
+    <h1>{{ $t('Employees') }}</h1>
     <div v-if="!employees" class="text-center">
       <div class="spinner-border spinner-border-sm"></div>
     </div>

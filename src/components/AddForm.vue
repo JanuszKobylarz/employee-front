@@ -1,18 +1,18 @@
 <template>
   <form>
     <div class="control">
-      <label for="name">Imię</label>
+      <label for="name">{{ $t('Name') }} </label>
       <input id="name" v-model="employee.name" />
     </div>
     <div class="control">
-      <label for="surname">Nazwisko</label>
+      <label for="surname">{{ $t('Surname') }} </label>
       <input id="surname" v-model="employee.surname" />
     </div>
     <div class="control">
-      <label for="position">Stanowisko</label>
+      <label for="position">{{ $t('Positon') }}</label>
       <input id="position" v-model="employee.position" />
     </div>
-    <button class="btn btn-submit" @click.prevent="testSubmit">Dodaj</button>
+    <button class="btn btn-submit" @click.prevent="testSubmit">{{ $t('Add') }}</button>
   </form>
 </template>
 <script setup>
