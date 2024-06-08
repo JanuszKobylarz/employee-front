@@ -11,4 +11,5 @@ const emitter = mitt()
 const app = createApp(App)
 app.provide('emitter', emitter)
 app.use(i18n)
+
 app.mount('#app')

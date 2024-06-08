@@ -1,8 +1,11 @@
 <template>
+  <Alert v-show="msg" :msg="msg" :type="alertType" />
   <div v-if="isOpen" class="modal" @click="closeModal">
     <div class="modal-content" @click.stop="">
-      <span class="modal-close" @click="closeModal">&times;</span>
-      <h2>{{ $t('Add subordinate') }}</h2>
+      <div class="modal-header">
+        <h2>{{ $t('Add subordinate') }}</h2>
+        <span class="modal-close" @click="closeModal">&times;</span>
+      </div>
       <form>
         <div class="control">
           <label for="name">{{ $t('Name') }} </label>
@@ -17,7 +20,12 @@
             <label for="parent">{{ $t('Supervisor') }}</label>
           </Search>
         </div>
-        <button class="btn btn-submit" @click.prevent="addEmployee">{{ $t('Add') }}</button>
+        <div v-if="loading" class="text-center">
+          <div class="spinner-border spinner-border-sm"></div>
+        </div>
+        <div v-if="!loading">
+          <button class="btn btn-submit" @click.prevent="addEmployee">{{ $t('Add') }}</button>
+        </div>
       </form>
     </div>
   </div>
@@ -25,6 +33,7 @@
 <script setup>
 import { ref, inject } from 'vue'
 import Search from './Form/Search.vue'
+import Alert from './Global/Alert.vue'
 const emitter = inject('emitter')
 
 emitter.on('add-child', (id) => {
@@ -33,6 +42,9 @@ emitter.on('add-child', (id) => {
 })
 
 const isOpen = ref(false)
+const loading = ref(false)
+const msg = ref('')
+const alertType = ref('success')
 const employee = ref({
   name: '',
   surname: '',
@@ -51,15 +63,36 @@ const closeModal = () => {
 }
 
 const addEmployee = () => {
+  loading.value = true
   fetch('http://localhost:8000/api/employee', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(employee.value)
-  }).then((result) => {
-    console.log(result.json())
   })
+    .then((response) => {
+      if (response.ok) {
+        return response.json()
+      }
+      return Promise.reject(response)
+    })
+    .then(() => {
+      msg.value = 'Employee added successfully'
+      alertType.value = 'alert-success'
+      setTimeout(() => {
+        msg.value = ''
+      }, 3000)
+    })
+    .catch((error) => {
+      msg.value = 'Error adding employee'
+      alertType.value = 'alert-error'
+      console.error(error)
+    })
+    .finally(() => {
+      loading.value = false
+      closeModal()
+    })
 }
 </script>
 <style scoped>
@@ -75,9 +108,16 @@ const addEmployee = () => {
   background-color: rgba(0, 0, 0, 0.4);
 }
 
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
 .modal-close {
+  cursor: pointer;
   color: #aaa;
-  float: right;
   font-size: 28px;
   font-weight: bold;
 }

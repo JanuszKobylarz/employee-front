@@ -7,8 +7,14 @@
       @change="emit('update:modelValue', $event.target.value)"
       :placeholder="$t('Find position')"
     />
+    <Loader v-if="loading" />
     <div v-if="employees.length > 0" class="autocomplete">
-      <div v-for="employee in employees" :key="employee.id" @click="selectEmployee(employee)">
+      <div
+        class="autocomplete-element"
+        v-for="employee in employees"
+        :key="employee.id"
+        @click="selectEmployee(employee)"
+      >
         {{ employee.position }}
       </div>
     </div>
@@ -16,19 +22,22 @@
 </template>
 <script setup>
 import { ref } from 'vue'
+import Loader from '../Global/Loader.vue'
 
 const input = ref(null)
 const employees = ref([])
+const loading = ref(false)
+
 const emit = defineEmits(['update:modelValue'])
 
 const searchEmployee = () => {
-  console.log(input.value.value)
   if (input.value.value.length > 2) {
     searchApi(input.value.value)
   }
 }
 
 const searchApi = (search) => {
+  loading.value = true
   fetch(`http://localhost:8000/api/employee/search?name=${search}`, {})
     .then((result) => {
       return result.json()
@@ -36,6 +45,9 @@ const searchApi = (search) => {
     .then((data) => {
       employees.value = data
       console.log(data)
+    })
+    .finally(() => {
+      loading.value = false
     })
 }
 
@@ -61,5 +73,13 @@ input {
   width: 100%;
   max-height: 200px;
   overflow-y: auto;
+  .autocomplete-element {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    cursor: pointer;
+    &:hover {
+      background-color: #f9f9f9;
+    }
+  }
 }
 </style>

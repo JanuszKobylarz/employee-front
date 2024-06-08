@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import AddForm from './components/AddForm.vue'
 import EmployeeItem from './components/EmployeeItem.vue'
+import LoaderSpinner from './components/Global/Loader.vue'
 
 const employees = ref(null)
 
@@ -17,8 +18,8 @@ onMounted(() => {
 <template>
   <div>
     <h1>{{ $t('Employees') }}</h1>
-    <div v-if="!employees" class="text-center">
-      <div class="spinner-border spinner-border-sm"></div>
+    <div v-if="!employees" class="loader">
+      <LoaderSpinner />
     </div>
     <div v-if="employees">
       <EmployeeItem v-for="employee in employees" :employee="employee" :key="employee.id" />

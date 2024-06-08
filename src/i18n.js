@@ -15,7 +15,9 @@ const messages = {
     'Find employee': 'Znajdź pracownika',
     'Show subordinates': 'Pokaż podwładnych',
     'Hide subordinates': 'Ukryj podwładnych',
-    'Add subordinate': 'Dodaj podwładnego'
+    'Add subordinate': 'Dodaj podwładnego',
+    'Find position': 'Znajdź stanowisko',
+    'Employee added successfully': 'Pracownik dodany pomyślnie'
   }
 }
 
