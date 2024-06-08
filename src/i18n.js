@@ -17,7 +17,11 @@ const messages = {
     'Hide subordinates': 'Ukryj podwładnych',
     'Add subordinate': 'Dodaj podwładnego',
     'Find position': 'Znajdź stanowisko',
-    'Employee added successfully': 'Pracownik dodany pomyślnie'
+    'Employee added successfully': 'Pracownik dodany pomyślnie',
+    'Error adding employee': 'Błąd dodawania pracownika',
+    'Field is required': 'Pole jest wymagane',
+    'Field can`t contain any number': 'Pole nie może zawierać żadnej liczby',
+    'All fields are required': 'Wszystkie pola są wymagane'
   }
 }
 

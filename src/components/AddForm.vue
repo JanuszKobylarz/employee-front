@@ -8,16 +8,14 @@
       </div>
       <form>
         <div class="control">
-          <label for="name">{{ $t('Name') }} </label>
-          <input id="name" v-model="employee.name" />
+          <CustomInput v-model="employee.name" :name="'Name'" :label="'Name'" />
         </div>
         <div class="control">
-          <label for="surname">{{ $t('Surname') }} </label>
-          <input id="surname" v-model="employee.surname" />
+          <CustomInput v-model="employee.surname" :name="'Surname'" :label="'Surname'" />
         </div>
         <div class="control">
           <Search v-model="employee.position">
-            <label for="parent">{{ $t('Supervisor') }}</label>
+            <label for="position">{{ $t('Supervisor') }}</label>
           </Search>
         </div>
         <div v-if="loading" class="text-center">
@@ -34,6 +32,7 @@
 import { ref, inject } from 'vue'
 import Search from './Form/Search.vue'
 import Alert from './Global/Alert.vue'
+import CustomInput from './Form/CustomInput.vue'
 const emitter = inject('emitter')
 
 emitter.on('add-child', (id) => {
@@ -63,6 +62,19 @@ const closeModal = () => {
 }
 
 const addEmployee = () => {
+  if (
+    employee.value.name.trim() === '' ||
+    employee.value.surname.trim() === '' ||
+    employee.value.position.trim() === ''
+  ) {
+    msg.value = 'All fields are required'
+    alertType.value = 'alert-error'
+    setTimeout(() => {
+      msg.value = ''
+    }, 3000)
+    return
+  }
+
   loading.value = true
   fetch('http://localhost:8000/api/employee', {
     method: 'POST',
@@ -143,19 +155,6 @@ const addEmployee = () => {
   display: flex;
   flex-direction: column;
   gap: 4px;
-
-  label {
-    font-size: 1.25em;
-  }
-  input {
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-  }
 }
 
 .btn {
