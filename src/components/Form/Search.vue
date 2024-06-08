@@ -44,7 +44,6 @@ const searchApi = (search) => {
     })
     .then((data) => {
       employees.value = data
-      console.log(data)
     })
     .finally(() => {
       loading.value = false
