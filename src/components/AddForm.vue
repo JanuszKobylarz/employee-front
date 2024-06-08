@@ -9,22 +9,24 @@
       <input id="surname" v-model="employee.surname" />
     </div>
     <div class="control">
-      <label for="position">{{ $t('Positon') }}</label>
+      <label for="position">{{ $t('Position') }}</label>
       <input id="position" v-model="employee.position" />
     </div>
+    <Search />
     <button class="btn btn-submit" @click.prevent="testSubmit">{{ $t('Add') }}</button>
   </form>
 </template>
 <script setup>
 import { ref } from 'vue'
+import Search from './Form/Search.vue'
 const employee = ref({
   name: '',
   surname: '',
-  position: ''
+  position: '',
+  parent_id: ''
 })
 
 const testSubmit = () => {
-  console.log(JSON.stringify(employee.value))
   fetch('http://localhost:8000/api/employee', {
     method: 'POST',
     headers: {

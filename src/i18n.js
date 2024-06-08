@@ -9,7 +9,9 @@ const messages = {
     Name: 'Imię',
     Surname: 'Nazwisko',
     Position: 'Stanowisko',
-    Add: 'Dodaj'
+    Add: 'Dodaj',
+    Supervisor: 'Przełożony',
+    'Find supervisor': 'Znajdź przełożonego'
   }
 }
 
