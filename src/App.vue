@@ -8,7 +8,9 @@ const employees = ref(null)
 onMounted(() => {
   fetch('http://localhost:8000/api/employees')
     .then((response) => response.json())
-    .then((data) => (employees.value = data))
+    .then((data) => {
+      employees.value = data
+    })
 })
 </script>
 
@@ -18,8 +20,10 @@ onMounted(() => {
     <div v-if="!employees" class="text-center">
       <div class="spinner-border spinner-border-sm"></div>
     </div>
-    <EmployeeItem v-if="employees" :employees="employees" />
-    <AddForm />
+    <div v-if="employees">
+      <EmployeeItem v-for="employee in employees" :employee="employee" :key="employee.id" />
+      <AddForm />
+    </div>
   </div>
 </template>
 

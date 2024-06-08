@@ -11,7 +11,11 @@ const messages = {
     Position: 'Stanowisko',
     Add: 'Dodaj',
     Supervisor: 'Przełożony',
-    'Find supervisor': 'Znajdź przełożonego'
+    'Find supervisor': 'Znajdź przełożonego',
+    'Find employee': 'Znajdź pracownika',
+    'Show subordinates': 'Pokaż podwładnych',
+    'Hide subordinates': 'Ukryj podwładnych',
+    'Add subordinate': 'Dodaj podwładnego'
   }
 }
 
