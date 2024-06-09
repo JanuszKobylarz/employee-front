@@ -21,7 +21,8 @@ const messages = {
     'Error adding employee': 'Błąd dodawania pracownika',
     'Field is required': 'Pole jest wymagane',
     'Field can`t contain any number': 'Pole nie może zawierać żadnej liczby',
-    'All fields are required': 'Wszystkie pola są wymagane'
+    'All fields are required': 'Wszystkie pola są wymagane',
+    'expand/hide': 'rozwiń/zwiń'
   }
 }
 

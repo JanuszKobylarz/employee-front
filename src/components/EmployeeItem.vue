@@ -1,42 +1,35 @@
 <template>
-  <div class="item">
+  <div class="item" :style="{ backgroundColor: color }">
     <div class="item-main">
+      <div v-if="employee.has_children">
+        <ExpandButton @toggle="toggleChildren(employee.id, $event)" :title="$t('expand/hide')" />
+      </div>
       <span>
         {{ employee.name }}
       </span>
       <span>
         {{ employee.surname }}
       </span>
-      <span>
-        {{ employee.position }}
-      </span>
-      <span> {{ employee.parent_id }} </span>
+      <span> ({{ employee.position }}) </span>
       <div>
-        <button
-          v-if="employee.has_children && !showChildrenFlag"
-          @click="toggleChildren(employee.id)"
-        >
-          {{ $t('Show subordinates') }}
-        </button>
-        <button
-          v-if="employee.has_children && showChildrenFlag"
-          @click="toggleChildren(employee.id)"
-        >
-          {{ $t('Hide subordinates') }}
-        </button>
-        <button @click="addChild(employee.id)">
-          {{ $t('Add subordinate') }}
-        </button>
+        <AddButton @add="addChild(employee.id)" :title="$t('Add subordinate')" />
       </div>
     </div>
     <div class="children" v-if="children.length > 0 && showChildrenFlag">
-      <EmployeeItem v-for="employee in children" :employee="employee" :key="employee.id" />
+      <EmployeeItem
+        v-for="employee in children"
+        :employee="employee"
+        :key="employee.id"
+        :level="level + 1"
+      />
     </div>
   </div>
 </template>
 <script setup>
-import { ref, inject } from 'vue'
-defineProps(['employee'])
+import { ref, inject, computed } from 'vue'
+import ExpandButton from './Form/ExpandButton.vue'
+import AddButton from './Form/AddButton.vue'
+const props = defineProps(['employee', 'level'])
 
 const emitter = inject('emitter')
 const addChild = (id) => {
@@ -45,8 +38,8 @@ const addChild = (id) => {
 
 const children = ref([])
 const showChildrenFlag = ref(false)
-const toggleChildren = (id) => {
-  showChildrenFlag.value = !showChildrenFlag.value
+const toggleChildren = (id, event) => {
+  showChildrenFlag.value = event
   loadChildren(id)
 }
 const loadChildren = (id) => {
@@ -61,15 +54,36 @@ const loadChildren = (id) => {
       children.value = data
     })
 }
+
+const colors = ref([
+  '#ddf3fe',
+  '#fde8d4',
+  '#e2f7f2',
+  '#f9eae1',
+  '#f5f5f5',
+  '#f7f7f7',
+  '#e8f5e9',
+  '#fffde7',
+  '#f3e5f5',
+  '#e0f7fa'
+])
+
+const color = computed(() => {
+  return colors.value[props.level % colors.value.length]
+})
 </script>
 <style scoped>
 .item-main {
   display: flex;
   padding: 1rem;
   gap: 4px;
+  position: relative;
 }
 
 .children {
   padding-left: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 </style>
