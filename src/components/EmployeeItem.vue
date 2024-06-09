@@ -78,6 +78,7 @@ const color = computed(() => {
   padding: 1rem;
   gap: 4px;
   position: relative;
+  align-items: center;
 }
 
 .children {
