@@ -7,7 +7,7 @@ import LoaderSpinner from './components/Global/Loader.vue'
 const employees = ref(null)
 
 onMounted(() => {
-  fetch('http://localhost:8000/api/employees')
+  fetch('https://nextcloud.kobisoft.pl/api/employees')
     .then((response) => response.json())
     .then((data) => {
       employees.value = data

@@ -46,7 +46,8 @@ const loadChildren = (id) => {
   if (children.value.length > 0) {
     return
   }
-  fetch(`http://localhost:8000/api/employees?parent=${id}`)
+
+  fetch(`https://nextcloud.kobisoft.pl/api/employees?parent=${id}`)
     .then((result) => {
       return result.json()
     })

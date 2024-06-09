@@ -76,7 +76,7 @@ const addEmployee = () => {
   }
 
   loading.value = true
-  fetch('http://localhost:8000/api/employee', {
+  fetch('https://nextcloud.kobisoft.pl/api/employee', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
