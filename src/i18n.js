@@ -5,7 +5,7 @@ const messages = {
     Employees: 'Employees'
   },
   pl: {
-    Employees: 'Pracownicy',
+    Employees: 'Lista pracowników',
     Name: 'Imię',
     Surname: 'Nazwisko',
     Position: 'Stanowisko',

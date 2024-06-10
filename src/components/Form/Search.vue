@@ -22,6 +22,7 @@
 </template>
 <script setup>
 import { ref } from 'vue'
+import { debounce } from 'lodash'
 import Loader from '../Global/Loader.vue'
 
 const input = ref(null)
@@ -30,11 +31,11 @@ const loading = ref(false)
 
 const emit = defineEmits(['update:modelValue'])
 
-const searchEmployee = () => {
+const searchEmployee = debounce(() => {
   if (input.value.value.length > 2) {
     searchApi(input.value.value)
   }
-}
+}, 500)
 
 const searchApi = (search) => {
   loading.value = true
@@ -52,7 +53,7 @@ const searchApi = (search) => {
 
 const selectEmployee = (employee) => {
   input.value.value = employee.position
-  emit('update:modelValue', employee.position);
+  emit('update:modelValue', employee.position)
   employees.value = []
 }
 </script>

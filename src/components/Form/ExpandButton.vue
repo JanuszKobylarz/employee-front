@@ -1,31 +1,24 @@
 <template>
-  <div :class="expandButtonClass" @click="toggleClass">
+  <div :class="expandButtonClass">
     <span></span>
     <span class="vertical"></span>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-const emit = defineEmits(['toggle'])
-const isExpanded = ref(false)
-
-const toggleClass = () => {
-  isExpanded.value = !isExpanded.value
-  emit('toggle', isExpanded.value)
-}
-
+import { computed } from 'vue'
+const props = defineProps(['isExpanded'])
 const expandButtonClass = computed(() => {
-  return isExpanded.value ? 'button expanded' : 'button'
+  return props.isExpanded ? 'button expanded' : 'button'
 })
 </script>
 
 <style scoped>
 .button {
   cursor: pointer;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  border-radius: 5px;
   background-color: green;
   transition: all 0.4s ease;
   position: relative;
@@ -35,19 +28,22 @@ const expandButtonClass = computed(() => {
   span {
     position: absolute;
     display: block;
-    width: 0px;
-    height: 0px;
-    border-style: solid;
-    border-width: 5px 0 5px 10px;
-    border-color: transparent transparent transparent #fff;
+    background-color: white;
+    width: 60%;
+    height: 2px;
     top: 50%;
     left: 50%;
+    transition: all 0.4s ease;
     transform: translate(-50%, -50%);
+    &.vertical {
+      transform: translate(-50%, -50%) rotate(90deg);
+    }
   }
 
   &.expanded {
-    background-color: red;
-    transform: rotate(90deg);
+    .vertical {
+      transform: translate(-50%, -50%) rotate(0deg);
+    }
   }
 }
 </style>

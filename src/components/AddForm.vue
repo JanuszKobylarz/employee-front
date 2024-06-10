@@ -1,6 +1,6 @@
 <template>
-  <Alert v-show="msg" :msg="msg" :type="alertType" />
-  <div v-if="isOpen" class="modal" @click="closeModal">
+  <Alert v-if="msg" :msg="msg" :type="alertType" />
+  <div v-if="isOpen" class="modal">
     <div class="modal-content" @click.stop="">
       <div class="modal-header">
         <h2>{{ $t('Add subordinate') }}</h2>
@@ -44,22 +44,23 @@ const isOpen = ref(false)
 const loading = ref(false)
 const msg = ref('')
 const alertType = ref('success')
-const employee = ref({
-  name: '',
-  surname: '',
-  position: '',
-  parent_id: ''
-})
+const employee = ref({})
 
 const closeModal = () => {
+  clearEmployee()
+  isOpen.value = false
+}
+
+const clearEmployee = () => {
   employee.value = {
     name: '',
     surname: '',
     position: '',
     parent_id: ''
   }
-  isOpen.value = false
 }
+
+clearEmployee()
 
 const addEmployee = () => {
   if (
@@ -69,9 +70,7 @@ const addEmployee = () => {
   ) {
     msg.value = 'All fields are required'
     alertType.value = 'alert-error'
-    setTimeout(() => {
-      msg.value = ''
-    }, 3000)
+    setAlertTimeOut()
     return
   }
 
@@ -92,20 +91,30 @@ const addEmployee = () => {
     .then((data) => {
       msg.value = 'Employee added successfully'
       alertType.value = 'alert-success'
-      setTimeout(() => {
-        msg.value = ''
-      }, 3000)
+      setAlertTimeOut()
       emitter.emit('added-child', data.parent_id)
+      closeModal()
     })
     .catch((error) => {
-      msg.value = 'Error adding employee'
-      alertType.value = 'alert-error'
-      console.error(error)
+      error.json().then((data) => {
+        alertType.value = 'alert-error'
+        if (data.error) {
+          msg.value = data.error
+        } else {
+          msg.value = 'Error adding employee'
+        }
+        setAlertTimeOut()
+      })
     })
     .finally(() => {
       loading.value = false
-      closeModal()
     })
+}
+
+const setAlertTimeOut = () => {
+  setTimeout(() => {
+    msg.value = ''
+  }, 3000)
 }
 </script>
 <style scoped>

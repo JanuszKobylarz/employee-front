@@ -1,8 +1,8 @@
 <template>
-  <div class="item" :style="{ backgroundColor: color }">
-    <div class="item-main">
-      <div v-if="employee.has_children">
-        <ExpandButton @toggle="toggleChildren(employee.id, $event)" :title="$t('expand/hide')" />
+  <div class="item">
+    <div class="item-main" @click="toggleChildren(employee.id)">
+      <div class="expand">
+        <ExpandButton v-if="employee_has_children" :isExpanded="showChildrenFlag" />
       </div>
       <span>
         {{ employee.name }}
@@ -11,25 +11,22 @@
         {{ employee.surname }}
       </span>
       <span> ({{ employee.position }}) </span>
-      <div>
-        <AddButton @add="addChild(employee.id)" :title="$t('Add subordinate')" />
+      <div class="control">
+        <AddButton @click.stop="addChild(employee.id)" />
       </div>
     </div>
     <div class="children" v-if="children.length > 0 && showChildrenFlag">
-      <EmployeeItem
-        v-for="employee in children"
-        :employee="employee"
-        :key="employee.id"
-        :level="level + 1"
-      />
+      <EmployeeItem v-for="employee in children" :employee="employee" :key="employee.id" />
     </div>
   </div>
 </template>
 <script setup>
-import { ref, inject, computed } from 'vue'
+import { ref, inject } from 'vue'
 import ExpandButton from './Form/ExpandButton.vue'
 import AddButton from './Form/AddButton.vue'
-const props = defineProps(['employee', 'level'])
+const props = defineProps(['employee'])
+
+const employee_has_children = ref(props.employee.has_children)
 
 const emitter = inject('emitter')
 const addChild = (id) => {
@@ -38,59 +35,68 @@ const addChild = (id) => {
 
 const children = ref([])
 const showChildrenFlag = ref(false)
-const toggleChildren = (id, event) => {
-  showChildrenFlag.value = event
-  loadChildren(id)
-}
-const loadChildren = (id) => {
+const toggleChildren = (id) => {
+  if (employee_has_children.value === false) {
+    return
+  }
+  showChildrenFlag.value = !showChildrenFlag.value
   if (children.value.length > 0) {
     return
   }
-  refetchChildren(id);
+  fetchChildren(id)
 }
 
 emitter.on('added-child', (id) => {
-  if(props.employee.id === id){
-    refetchChildren(id)
+  if (props.employee.id === id) {
+    fetchChildren(id)
   }
 })
 
-const refetchChildren = (id) => {
+const fetchChildren = (id) => {
   fetch(`http://localhost:8000/api/employees?parent=${id}`)
     .then((result) => {
       return result.json()
     })
     .then((data) => {
       children.value = data
-      props.employee.has_children = children.value.length > 0;
+      employee_has_children.value = children.value.length > 0
     })
 }
-
-
-const colors = ref([
-  '#ddf3fe',
-  '#fde8d4',
-  '#e2f7f2',
-  '#f9eae1',
-  '#f5f5f5',
-  '#f7f7f7',
-  '#e8f5e9',
-  '#fffde7',
-  '#f3e5f5',
-  '#e0f7fa'
-])
-
-const color = computed(() => {
-  return colors.value[props.level % colors.value.length]
-})
 </script>
 <style scoped>
+.item {
+  cursor: pointer;
+  background-color: white;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+
+  .children {
+    padding-bottom: 10px;
+    padding-right: 10px;
+  }
+}
+
+.expand {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 30px;
+}
+
 .item-main {
   display: flex;
   padding: 1rem;
   gap: 4px;
   position: relative;
   align-items: center;
+
+  .control {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    margin-left: auto;
+    right: 1rem;
+  }
 }
 
 .children {
