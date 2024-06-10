@@ -38,7 +38,7 @@ const searchEmployee = () => {
 
 const searchApi = (search) => {
   loading.value = true
-  fetch(`https://nextcloud.kobisoft.pl/api/employee/search?name=${search}`, {})
+  fetch(`http://localhost:8000/api/employee/search?name=${search}`, {})
     .then((result) => {
       return result.json()
     })
@@ -52,6 +52,7 @@ const searchApi = (search) => {
 
 const selectEmployee = (employee) => {
   input.value.value = employee.position
+  emit('update:modelValue', employee.position);
   employees.value = []
 }
 </script>

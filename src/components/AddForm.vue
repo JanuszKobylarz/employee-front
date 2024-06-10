@@ -15,7 +15,7 @@
         </div>
         <div class="control">
           <Search v-model="employee.position">
-            <label for="position">{{ $t('Supervisor') }}</label>
+            <label for="position">{{ $t('Position') }}</label>
           </Search>
         </div>
         <div v-if="loading" class="text-center">
@@ -76,7 +76,7 @@ const addEmployee = () => {
   }
 
   loading.value = true
-  fetch('https://nextcloud.kobisoft.pl/api/employee', {
+  fetch('http://localhost:8000/api/employee', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -89,12 +89,13 @@ const addEmployee = () => {
       }
       return Promise.reject(response)
     })
-    .then(() => {
+    .then((data) => {
       msg.value = 'Employee added successfully'
       alertType.value = 'alert-success'
       setTimeout(() => {
         msg.value = ''
       }, 3000)
+      emitter.emit('added-child', data.parent_id)
     })
     .catch((error) => {
       msg.value = 'Error adding employee'

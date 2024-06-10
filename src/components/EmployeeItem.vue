@@ -46,15 +46,26 @@ const loadChildren = (id) => {
   if (children.value.length > 0) {
     return
   }
+  refetchChildren(id);
+}
 
-  fetch(`https://nextcloud.kobisoft.pl/api/employees?parent=${id}`)
+emitter.on('added-child', (id) => {
+  if(props.employee.id === id){
+    refetchChildren(id)
+  }
+})
+
+const refetchChildren = (id) => {
+  fetch(`http://localhost:8000/api/employees?parent=${id}`)
     .then((result) => {
       return result.json()
     })
     .then((data) => {
       children.value = data
+      props.employee.has_children = children.value.length > 0;
     })
 }
+
 
 const colors = ref([
   '#ddf3fe',
