@@ -1,13 +1,16 @@
 <template>
-  <div class="alert" :class="type">
-    <p>{{ $t(msg) }}</p>
+  <div class="alert" :class="state.type" v-if="state.show">
+    <p>{{ $t(state.message) }}</p>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-defineProps(['msg', 'type'])
+  import useAlert from '@/composables/useAlert'
+
+  const { state } = useAlert()
 </script>
+
+
 
 <style scoped>
 .alert {

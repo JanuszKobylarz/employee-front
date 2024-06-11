@@ -25,31 +25,20 @@ import { ref } from 'vue'
 import { debounce } from 'lodash'
 import Loader from '../Global/Loader.vue'
 
+import useFetch from '../../composables/useFetch'
+
 const input = ref(null)
-const employees = ref([])
-const loading = ref(false)
 
 const emit = defineEmits(['update:modelValue'])
 
 const searchEmployee = debounce(() => {
   if (input.value.value.length > 2) {
-    searchApi(input.value.value)
+    params.value = { 'name': input.value.value }
+    fetchData()
   }
 }, 500)
 
-const searchApi = (search) => {
-  loading.value = true
-  fetch(`http://localhost:8000/api/employee/search?name=${search}`, {})
-    .then((result) => {
-      return result.json()
-    })
-    .then((data) => {
-      employees.value = data
-    })
-    .finally(() => {
-      loading.value = false
-    })
-}
+const { data: employees, loading, fetchData, params } = useFetch(`http://localhost:8000/api/employee/search`)
 
 const selectEmployee = (employee) => {
   input.value.value = employee.position

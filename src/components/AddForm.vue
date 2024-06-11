@@ -1,5 +1,4 @@
 <template>
-  <Alert v-if="msg" :msg="msg" :type="alertType" />
   <div v-if="isOpen" class="modal">
     <div class="modal-content" @click.stop="">
       <div class="modal-header">
@@ -31,8 +30,13 @@
 <script setup>
 import { ref, inject } from 'vue'
 import Search from './Form/Search.vue'
-import Alert from './Global/Alert.vue'
 import CustomInput from './Form/CustomInput.vue'
+
+
+import useAlert from '../composables/useAlert'
+
+const { showAlert } = useAlert()
+
 const emitter = inject('emitter')
 
 emitter.on('add-child', (id) => {
@@ -42,8 +46,6 @@ emitter.on('add-child', (id) => {
 
 const isOpen = ref(false)
 const loading = ref(false)
-const msg = ref('')
-const alertType = ref('success')
 const employee = ref({})
 
 const closeModal = () => {
@@ -68,9 +70,7 @@ const addEmployee = () => {
     employee.value.surname.trim() === '' ||
     employee.value.position.trim() === ''
   ) {
-    msg.value = 'All fields are required'
-    alertType.value = 'alert-error'
-    setAlertTimeOut()
+    showAlert('All fields are required', 'alert-error', 1500)
     return
   }
 
@@ -89,32 +89,24 @@ const addEmployee = () => {
       return Promise.reject(response)
     })
     .then((data) => {
-      msg.value = 'Employee added successfully'
-      alertType.value = 'alert-success'
-      setAlertTimeOut()
+      showAlert('Employee added successfully', 'alert-success', 1500)
       emitter.emit('added-child', data.parent_id)
       closeModal()
     })
     .catch((error) => {
       error.json().then((data) => {
-        alertType.value = 'alert-error'
+        const message = ref('')
         if (data.error) {
-          msg.value = data.error
+          message.value = data.error
         } else {
-          msg.value = 'Error adding employee'
+          message.value = 'Error adding employee'
         }
-        setAlertTimeOut()
+        showAlert(message.value,  'alert-error', 1500)
       })
     })
     .finally(() => {
       loading.value = false
     })
-}
-
-const setAlertTimeOut = () => {
-  setTimeout(() => {
-    msg.value = ''
-  }, 3000)
 }
 </script>
 <style scoped>

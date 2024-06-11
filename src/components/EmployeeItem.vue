@@ -21,9 +21,12 @@
   </div>
 </template>
 <script setup>
-import { ref, inject } from 'vue'
+import { ref, inject, watch } from 'vue'
 import ExpandButton from './Form/ExpandButton.vue'
 import AddButton from './Form/AddButton.vue'
+
+import useFetch from '../composables/useFetch'
+
 const props = defineProps(['employee'])
 
 const employee_has_children = ref(props.employee.has_children)
@@ -33,9 +36,8 @@ const addChild = (id) => {
   emitter.emit('add-child', id)
 }
 
-const children = ref([])
 const showChildrenFlag = ref(false)
-const toggleChildren = (id) => {
+const toggleChildren = () => {
   if (employee_has_children.value === false) {
     return
   }
@@ -43,25 +45,24 @@ const toggleChildren = (id) => {
   if (children.value.length > 0) {
     return
   }
-  fetchChildren(id)
+  params.value = {'parent': props.employee.id }
+  fetchData()
 }
 
 emitter.on('added-child', (id) => {
   if (props.employee.id === id) {
-    fetchChildren(id)
+    params.value = { 'parent': props.employee.id }
+    fetchData()
   }
 })
 
-const fetchChildren = (id) => {
-  fetch(`http://localhost:8000/api/employees?parent=${id}`)
-    .then((result) => {
-      return result.json()
-    })
-    .then((data) => {
-      children.value = data
-      employee_has_children.value = children.value.length > 0
-    })
-}
+const { data: children, params, fetchData } = useFetch(`http://localhost:8000/api/employees`)
+
+watch(children, (newChildren) => {
+  employee_has_children.value = newChildren.length > 0
+})
+
+
 </script>
 <style scoped>
 .item {

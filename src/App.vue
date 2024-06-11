@@ -1,22 +1,22 @@
 <script setup>
-import { ref } from 'vue'
+import Alert from './components/Global/Alert.vue';
 import AddForm from './components/AddForm.vue'
 import EmployeeItem from './components/EmployeeItem.vue'
 import LoaderSpinner from './components/Global/Loader.vue'
 
-const employees = ref(null)
+import useFetch from './composables/useFetch'
 
-fetch('http://localhost:8000/api/employees')
-  .then((response) => response.json())
-  .then((data) => {
-    employees.value = data
-  })
+const { data: employees, isLoading, fetchData } = useFetch('http://localhost:8000/api/employees')
+
+fetchData()
+
 </script>
 
 <template>
   <div>
+    <Alert />
     <h1>{{ $t('Employees') }}</h1>
-    <div v-if="!employees" class="loader">
+    <div v-if="isLoading" class="loader">
       <LoaderSpinner />
     </div>
     <div v-if="employees" class="employees-container">
