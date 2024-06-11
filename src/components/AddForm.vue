@@ -32,7 +32,6 @@ import { ref, inject } from 'vue'
 import Search from './Form/Search.vue'
 import CustomInput from './Form/CustomInput.vue'
 
-
 import useAlert from '../composables/useAlert'
 
 const { showAlert } = useAlert()
@@ -75,7 +74,7 @@ const addEmployee = () => {
   }
 
   loading.value = true
-  fetch('http://localhost:8000/api/employee', {
+  fetch('https://nextcloud.kobisoft.pl/api/employee', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -101,7 +100,7 @@ const addEmployee = () => {
         } else {
           message.value = 'Error adding employee'
         }
-        showAlert(message.value,  'alert-error', 1500)
+        showAlert(message.value, 'alert-error', 1500)
       })
     })
     .finally(() => {

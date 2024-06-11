@@ -33,12 +33,17 @@ const emit = defineEmits(['update:modelValue'])
 
 const searchEmployee = debounce(() => {
   if (input.value.value.length > 2) {
-    params.value = { 'name': input.value.value }
+    params.value = { name: input.value.value }
     fetchData()
   }
 }, 500)
 
-const { data: employees, loading, fetchData, params } = useFetch(`http://localhost:8000/api/employee/search`)
+const {
+  data: employees,
+  loading,
+  fetchData,
+  params
+} = useFetch(`https://nextcloud.kobisoft.pl/api/employee/search`)
 
 const selectEmployee = (employee) => {
   input.value.value = employee.position

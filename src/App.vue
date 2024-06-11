@@ -1,15 +1,18 @@
 <script setup>
-import Alert from './components/Global/Alert.vue';
+import Alert from './components/Global/Alert.vue'
 import AddForm from './components/AddForm.vue'
 import EmployeeItem from './components/EmployeeItem.vue'
 import LoaderSpinner from './components/Global/Loader.vue'
 
 import useFetch from './composables/useFetch'
 
-const { data: employees, isLoading, fetchData } = useFetch('http://localhost:8000/api/employees')
+const {
+  data: employees,
+  isLoading,
+  fetchData
+} = useFetch('https://nextcloud.kobisoft.pl/api/employees')
 
 fetchData()
-
 </script>
 
 <template>

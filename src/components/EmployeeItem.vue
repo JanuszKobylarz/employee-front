@@ -45,24 +45,26 @@ const toggleChildren = () => {
   if (children.value.length > 0) {
     return
   }
-  params.value = {'parent': props.employee.id }
+  params.value = { parent: props.employee.id }
   fetchData()
 }
 
 emitter.on('added-child', (id) => {
   if (props.employee.id === id) {
-    params.value = { 'parent': props.employee.id }
+    params.value = { parent: props.employee.id }
     fetchData()
   }
 })
 
-const { data: children, params, fetchData } = useFetch(`http://localhost:8000/api/employees`)
+const {
+  data: children,
+  params,
+  fetchData
+} = useFetch(`https://nextcloud.kobisoft.pl/api/employees`)
 
 watch(children, (newChildren) => {
   employee_has_children.value = newChildren.length > 0
 })
-
-
 </script>
 <style scoped>
 .item {
